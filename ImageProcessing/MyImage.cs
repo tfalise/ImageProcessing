@@ -72,5 +72,7 @@ namespace ImageProcessing
         public int Width { get; }
         public int ColorDepth { get; }
         public Pixel[] Pixels { get; private set; }
+
+        public Pixel this[int row, int column] => Pixels[(Height - 1 - row) * Width + column];
     }
 }

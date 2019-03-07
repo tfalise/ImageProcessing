@@ -77,5 +77,13 @@ namespace ImageProcessing.Tests
                 new Pixel(255, 0, 0),
                 new Pixel(0, 255, 0));
         }
+
+        [Test]
+        public void Should_access_image_pixels_when_using_indexer()
+        {
+            var image = new MyImage(ImageWithRowPaddingBytes);
+
+            Check.That(image[0, 0]).IsEqualTo(image.Pixels[2]);
+        }
     }
 }
