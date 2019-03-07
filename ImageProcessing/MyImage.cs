@@ -74,5 +74,40 @@ namespace ImageProcessing
         public Pixel[] Pixels { get; private set; }
 
         public Pixel this[int row, int column] => Pixels[row * Width + column];
+
+        public byte[] GetBytes()
+        {
+            var byteWidth = Width * 3;
+            if (byteWidth % 4 != 0)
+            {
+                byteWidth += 4 - byteWidth % 4;
+            }
+
+            var bytes = new byte[14 + 50 + Height * byteWidth];
+
+            bytes[0] = 0x42;
+            bytes[1] = 0x4D;
+
+            WriteLittleEndian(bytes, 2, Size);
+            WriteLittleEndian(bytes, 10, Offset);
+
+            bytes[14] = 40;
+            WriteLittleEndian(bytes, 18, Width);
+            WriteLittleEndian(bytes, 22, Height);
+            bytes[26] = 0x01;
+            WriteLittleEndian(bytes, 28, ColorDepth);
+
+            WriteLittleEndian(bytes, 34, byteWidth * Height);
+
+            return bytes;
+        }
+
+        private void WriteLittleEndian(byte[] data, int index, int value)
+        {
+            data[index] = (byte)(value & 0xff);
+            data[index + 1] = (byte)(value >> 8 & 0xff);
+            data[index + 2] = (byte)(value >> 16 & 0xff);
+            data[index + 3] = (byte)(value >> 24 & 0xff);
+        }
     }
 }
