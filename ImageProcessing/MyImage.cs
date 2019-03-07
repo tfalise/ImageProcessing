@@ -10,6 +10,10 @@ namespace ImageProcessing
 {
     public class MyImage
     {
+        private const int BitmapHeaderSize = 14;
+        private const int BitmapInformationHeaderSize = 40;
+        private readonly int _rowByteSize;
+
         public MyImage(string path) : this(File.ReadAllBytes(path))
         {
             
@@ -24,6 +28,8 @@ namespace ImageProcessing
             Height = ReadLittleEndian(data, 22);
             ColorDepth = ReadLittleEndian(data, 28);
 
+            _rowByteSize = ComputeRowByteSize();
+
             ReadImageData(data);
         }
 
@@ -31,23 +37,28 @@ namespace ImageProcessing
         {
             Pixels = new Pixel[Width * Height];
 
+            for (var row = Height - 1; row >= 0; row--)
+            {
+                for (var column = 0; column < Width; column++)
+                {
+                    var pixelOffset = Offset + (Height - row - 1) * _rowByteSize + column * 3;
+                    Pixels[Width * row + column] = new Pixel(data[pixelOffset], data[pixelOffset + 1], data[pixelOffset + 2]);
+                }
+            }
+        }
+
+        private int ComputeRowByteSize()
+        {
             var byteWidth = Width * 3;
             if (byteWidth % 4 != 0)
             {
                 byteWidth += 4 - byteWidth % 4;
             }
 
-            for (var row = Height - 1; row >= 0; row--)
-            {
-                for (var column = 0; column < Width; column++)
-                {
-                    var pixelOffset = Offset + (Height - row - 1) * byteWidth + column * 3;
-                    Pixels[Width * row + column] = new Pixel(data[pixelOffset], data[pixelOffset + 1], data[pixelOffset + 2]);
-                }
-            }
+            return byteWidth;
         }
 
-        private int ReadLittleEndian(byte[] data, int index)
+        private static int ReadLittleEndian(byte[] data, int index)
         {
             return data[index] 
                  | data[index + 1] << 8 
@@ -55,7 +66,7 @@ namespace ImageProcessing
                  | data[index + 3] << 24;
         }
 
-        private ImageType ReadImageType(byte[] data)
+        private static ImageType ReadImageType(byte[] data)
         {
             if (data[0] == 'B' && data[1] == 'M')
             {
@@ -77,40 +88,47 @@ namespace ImageProcessing
 
         public byte[] GetBytes()
         {
-            var byteWidth = Width * 3;
-            if (byteWidth % 4 != 0)
+            var bytes = new byte[BitmapHeaderSize + BitmapInformationHeaderSize + Height * _rowByteSize];
+
+            WriteImageHeader(bytes);
+            WriteImageInformationHeader(bytes);
+            WriteImageData(bytes);
+
+            return bytes;
+        }
+
+        private void WriteImageData(byte[] bytes)
+        {
+            for (int row = 0; row < Height; row++)
             {
-                byteWidth += 4 - byteWidth % 4;
+                for (int column = 0; column < Width; column++)
+                {
+                    var pixelOffset = Offset + (Height - row - 1) * _rowByteSize + column * 3;
+                    bytes[pixelOffset] = (byte) this[row, column].Blue;
+                    bytes[pixelOffset + 1] = (byte) this[row, column].Green;
+                    bytes[pixelOffset + 2] = (byte) this[row, column].Red;
+                }
             }
+        }
 
-            var bytes = new byte[14 + 40 + Height * byteWidth];
-
-            bytes[0] = 0x42;
-            bytes[1] = 0x4D;
-
-            WriteLittleEndian(bytes, 2, Size);
-            WriteLittleEndian(bytes, 10, Offset);
-
-            bytes[14] = 40;
+        private void WriteImageInformationHeader(byte[] bytes)
+        {
+            bytes[BitmapHeaderSize] = BitmapInformationHeaderSize;
             WriteLittleEndian(bytes, 18, Width);
             WriteLittleEndian(bytes, 22, Height);
             bytes[26] = 0x01;
             WriteLittleEndian(bytes, 28, ColorDepth);
 
-            WriteLittleEndian(bytes, 34, byteWidth * Height);
+            WriteLittleEndian(bytes, 34, _rowByteSize * Height);
+        }
 
-            for (int row = 0; row < Height; row++)
-            {
-                for (int column = 0; column < Width; column++)
-                {
-                    var pixelOffset = Offset + (Height - row - 1) * byteWidth + column * 3;
-                    bytes[pixelOffset] = (byte)this[row, column].Blue;
-                    bytes[pixelOffset + 1] = (byte)this[row, column].Green;
-                    bytes[pixelOffset + 2] = (byte)this[row, column].Red;
-                }
-            }
+        private void WriteImageHeader(byte[] bytes)
+        {
+            bytes[0] = 0x42;
+            bytes[1] = 0x4D;
 
-            return bytes;
+            WriteLittleEndian(bytes, 2, Size);
+            WriteLittleEndian(bytes, 10, Offset);
         }
 
         private void WriteLittleEndian(byte[] data, int index, int value)
