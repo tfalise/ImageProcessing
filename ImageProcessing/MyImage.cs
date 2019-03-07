@@ -30,10 +30,20 @@ namespace ImageProcessing
         private void ReadImageData(byte[] data)
         {
             Pixels = new Pixel[Width * Height];
-            for (var i = data.Length - 1; i >= Offset; i-=3)
+
+            var byteWidth = Width * 3;
+            if (byteWidth % 4 != 0)
             {
-                var iPixel = (i - 54) / 3;
-                Pixels[iPixel] = new Pixel(data[i - 2], data[i - 1], data[i]);
+                byteWidth += 4 - byteWidth % 4;
+            }
+
+            for (var row = 0; row < Height; row++)
+            {
+                for (var column = 0; column < Width; column++)
+                {
+                    var pixelOffset = Offset + row * byteWidth + column * 3;
+                    Pixels[Width * row + column] = new Pixel(data[pixelOffset], data[pixelOffset + 1], data[pixelOffset + 2]);
+                }
             }
         }
 

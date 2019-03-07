@@ -4,7 +4,7 @@ namespace ImageProcessing
 {
     public struct Pixel
     {
-        public Pixel(int red, int green, int blue)
+        public Pixel(int blue, int green, int red)
         {
             Red = red;
             Green = green;
