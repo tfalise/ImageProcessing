@@ -83,7 +83,7 @@ namespace ImageProcessing
                 byteWidth += 4 - byteWidth % 4;
             }
 
-            var bytes = new byte[14 + 50 + Height * byteWidth];
+            var bytes = new byte[14 + 40 + Height * byteWidth];
 
             bytes[0] = 0x42;
             bytes[1] = 0x4D;
@@ -99,6 +99,17 @@ namespace ImageProcessing
 
             WriteLittleEndian(bytes, 34, byteWidth * Height);
 
+            for (int row = 0; row < Height; row++)
+            {
+                for (int column = 0; column < Width; column++)
+                {
+                    var pixelOffset = Offset + (Height - row - 1) * byteWidth + column * 3;
+                    bytes[pixelOffset] = (byte)this[row, column].Blue;
+                    bytes[pixelOffset + 1] = (byte)this[row, column].Green;
+                    bytes[pixelOffset + 2] = (byte)this[row, column].Red;
+                }
+            }
+
             return bytes;
         }
 
@@ -108,6 +119,11 @@ namespace ImageProcessing
             data[index + 1] = (byte)(value >> 8 & 0xff);
             data[index + 2] = (byte)(value >> 16 & 0xff);
             data[index + 3] = (byte)(value >> 24 & 0xff);
+        }
+
+        public void WriteToFile(string path)
+        {
+            File.WriteAllBytes(path, GetBytes());
         }
     }
 }
