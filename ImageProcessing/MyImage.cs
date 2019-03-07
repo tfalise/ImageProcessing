@@ -37,11 +37,11 @@ namespace ImageProcessing
                 byteWidth += 4 - byteWidth % 4;
             }
 
-            for (var row = 0; row < Height; row++)
+            for (var row = Height - 1; row >= 0; row--)
             {
                 for (var column = 0; column < Width; column++)
                 {
-                    var pixelOffset = Offset + row * byteWidth + column * 3;
+                    var pixelOffset = Offset + (Height - row - 1) * byteWidth + column * 3;
                     Pixels[Width * row + column] = new Pixel(data[pixelOffset], data[pixelOffset + 1], data[pixelOffset + 2]);
                 }
             }
@@ -73,6 +73,6 @@ namespace ImageProcessing
         public int ColorDepth { get; }
         public Pixel[] Pixels { get; private set; }
 
-        public Pixel this[int row, int column] => Pixels[(Height - 1 - row) * Width + column];
+        public Pixel this[int row, int column] => Pixels[row * Width + column];
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace ImageProcessing
 {
+    [DebuggerDisplay("R{Red}G{Green}B{Blue}")]
     public struct Pixel
     {
         public Pixel(int blue, int green, int red)

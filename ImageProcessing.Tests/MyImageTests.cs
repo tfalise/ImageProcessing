@@ -72,10 +72,10 @@ namespace ImageProcessing.Tests
 
             Check.That(image.Pixels).HasSize(4);
             Check.That(image.Pixels).ContainsExactly(
-                new Pixel(0, 0, 255),
-                new Pixel(255, 255, 255),
                 new Pixel(255, 0, 0),
-                new Pixel(0, 255, 0));
+                new Pixel(0, 255, 0),
+                new Pixel(0, 0, 255),
+                new Pixel(255, 255, 255));
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace ImageProcessing.Tests
         {
             var image = new MyImage(ImageWithRowPaddingBytes);
 
-            Check.That(image[0, 0]).IsEqualTo(image.Pixels[2]);
+            Check.That(image[1, 0]).IsEqualTo(image.Pixels[2]);
         }
     }
 }
