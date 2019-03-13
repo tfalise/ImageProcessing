@@ -44,11 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlackAndWhiteTransformation.cs" />
+    <Compile Include="ImageRotation.cs" />
     <Compile Include="ImageType.cs" />
     <Compile Include="MyImage.cs" />
     <Compile Include="Pixel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RotateTransformation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

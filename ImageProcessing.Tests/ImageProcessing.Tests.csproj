@@ -53,6 +53,7 @@
     <Compile Include="BlackAndWhiteTransformationTests.cs" />
     <Compile Include="MyImageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RotateTransformationTests.cs" />
     <Compile Include="TestImages.cs" />
   </ItemGroup>
   <ItemGroup>
