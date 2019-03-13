@@ -13,7 +13,17 @@
         {
             var result = CreateRotatedCanvas(source);
 
-
+            if (_rotation == ImageRotation.Clockwise90)
+            {
+                for (var row = 0; row < result.Height; row++)
+                {
+                    for (var column = 0; column < result.Width; column++)
+                    {
+                        var sourcePixel = source[source.Height - 1 - column, row];
+                        result[row, column] = sourcePixel;
+                    }
+                }
+            }
 
             return result;
         }

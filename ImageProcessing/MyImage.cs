@@ -99,7 +99,11 @@ namespace ImageProcessing
         public int ColorDepth { get; }
         public Pixel[] Pixels { get; private set; }
 
-        public Pixel this[int row, int column] => Pixels[row * Width + column];
+        public Pixel this[int row, int column]
+        {
+            get => Pixels[row * Width + column];
+            set => Pixels[row * Width + column] = value;
+        }
 
         public byte[] GetBytes()
         {
