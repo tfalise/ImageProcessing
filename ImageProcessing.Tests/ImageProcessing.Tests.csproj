@@ -50,8 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlackAndWhiteTransformationTests.cs" />
     <Compile Include="MyImageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestImages.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImageProcessing\ImageProcessing.csproj">

@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlackAndWhiteTransformation.cs" />
     <Compile Include="ImageType.cs" />
     <Compile Include="MyImage.cs" />
     <Compile Include="Pixel.cs" />

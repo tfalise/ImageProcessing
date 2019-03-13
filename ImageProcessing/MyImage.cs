@@ -33,6 +33,21 @@ namespace ImageProcessing
             ReadImageData(data);
         }
 
+        public MyImage(int width, int height)
+        {
+            ImageType = ImageType.Bitmap;
+            Width = width;
+            Height = height;
+            ColorDepth = 24;
+
+            _rowByteSize = ComputeRowByteSize();
+
+            Size = BitmapHeaderSize + BitmapInformationHeaderSize + _rowByteSize * Height;
+            Offset = BitmapHeaderSize + BitmapInformationHeaderSize;
+
+            Pixels = new Pixel[Width * Height];
+        }
+
         private void ReadImageData(byte[] data)
         {
             Pixels = new Pixel[Width * Height];
