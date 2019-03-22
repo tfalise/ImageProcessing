@@ -46,5 +46,18 @@ namespace ImageProcessing.Tests
             Check.That(actual[actual.Height - 1, 0]).IsEqualTo(source[source.Height - 1, source.Width - 1]);
             Check.That(actual[actual.Height - 1, actual.Width - 1]).IsEqualTo(source[0, source.Width - 1]);
         }
+
+        [Test]
+        public void Should_move_pixels_when_doing_a_180_degrees_rotation()
+        {
+            var source = new MyImage(TestImages.ImageWithAllDifferentPixels);
+            var transformation = new RotateTransformation(ImageRotation.Clockwise180);
+            var actual = transformation.Process(source);
+
+            Check.That(actual[0, 0]).IsEqualTo(source[source.Height - 1, source.Width - 1]);
+            Check.That(actual[0, actual.Width - 1]).IsEqualTo(source[source.Height - 1, 0]);
+            Check.That(actual[actual.Height - 1, 0]).IsEqualTo(source[0, source.Width - 1]);
+            Check.That(actual[actual.Height - 1, actual.Width - 1]).IsEqualTo(source[0, 0]);
+        }
     }
 }
