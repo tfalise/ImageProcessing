@@ -2,6 +2,18 @@
 {
     public class BlackAndWhiteTransformation
     {
+        private BlackAndWhiteAlgorithm _algorithm;
+
+        public BlackAndWhiteTransformation() : this(BlackAndWhiteAlgorithm.Average)
+        {
+            
+        }
+
+        public BlackAndWhiteTransformation(BlackAndWhiteAlgorithm algorithm)
+        {
+            _algorithm = algorithm;
+        }
+
         public MyImage Process(MyImage source)
         {
             var result = new MyImage(source.Width, source.Height);

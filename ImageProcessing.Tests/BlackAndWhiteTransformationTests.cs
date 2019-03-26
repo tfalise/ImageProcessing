@@ -45,5 +45,21 @@ namespace ImageProcessing.Tests
             Check.That(actual.Size).IsEqualTo(image.Size);
             Check.That(actual.Offset).IsEqualTo(image.Offset);
         }
+
+        [Test]
+        public void Should_use_average_gray_method_when_specified_in_black_and_white_conversion()
+        {
+            var image = new MyImage(TestImages.ImageWithAllDifferentPixels);
+            var transformation = new BlackAndWhiteTransformation(BlackAndWhiteAlgorithm.Average);
+            var actual = transformation.Process(image);
+            
+            for (var i = 0; i < image.Pixels.Length; i++)
+            {
+                var expectedGrayLevel = (image.Pixels[i].Red + image.Pixels[i].Blue + image.Pixels[i].Green) / 3;
+                Check.That(actual.Pixels[i].Red).IsEqualTo(expectedGrayLevel);
+                Check.That(actual.Pixels[i].Blue).IsEqualTo(expectedGrayLevel);
+                Check.That(actual.Pixels[i].Green).IsEqualTo(expectedGrayLevel);
+            }
+        }
     }
 }
