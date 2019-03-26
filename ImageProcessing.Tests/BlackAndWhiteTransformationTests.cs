@@ -61,5 +61,23 @@ namespace ImageProcessing.Tests
                 Check.That(actual.Pixels[i].Green).IsEqualTo(expectedGrayLevel);
             }
         }
+
+        [Test]
+        public void Should_use_lightness_gray_method_when_specified_in_black_and_white_conversion()
+        {
+            var image = new MyImage(TestImages.ImageWithAllDifferentPixels);
+            var transformation = new BlackAndWhiteTransformation(BlackAndWhiteAlgorithm.Lightness);
+            var actual = transformation.Process(image);
+            
+            for (var i = 0; i < image.Pixels.Length; i++)
+            {
+                var maxRGB = Math.Max(Math.Max(image.Pixels[i].Red, image.Pixels[i].Blue), image.Pixels[i].Green);
+                var minRGB = Math.Min(Math.Min(image.Pixels[i].Red, image.Pixels[i].Blue), image.Pixels[i].Green);
+                var expectedGrayLevel = (maxRGB + minRGB) / 2;
+                Check.That(actual.Pixels[i].Red).IsEqualTo(expectedGrayLevel);
+                Check.That(actual.Pixels[i].Blue).IsEqualTo(expectedGrayLevel);
+                Check.That(actual.Pixels[i].Green).IsEqualTo(expectedGrayLevel);
+            }
+        }
     }
 }
