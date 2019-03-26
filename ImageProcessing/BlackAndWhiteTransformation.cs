@@ -26,11 +26,16 @@ namespace ImageProcessing
                     var grayLevel = (source.Pixels[i].Red + source.Pixels[i].Blue + source.Pixels[i].Green) / 3;
                     result.Pixels[i] = new Pixel(grayLevel, grayLevel, grayLevel);
                 }
-                else 
+                else if(_algorithm == BlackAndWhiteAlgorithm.Lightness)
                 {
                     var maxRGB = Math.Max(Math.Max(source.Pixels[i].Red, source.Pixels[i].Blue), source.Pixels[i].Green);
                     var minRGB = Math.Min(Math.Min(source.Pixels[i].Red, source.Pixels[i].Blue), source.Pixels[i].Green);
                     var grayLevel = (maxRGB + minRGB) / 2;
+                    result.Pixels[i] = new Pixel(grayLevel, grayLevel, grayLevel);
+                }
+                else 
+                {
+                    var grayLevel = (int)(0.21 * source.Pixels[i].Red + 0.07 * source.Pixels[i].Blue + 0.72 * source.Pixels[i].Green);
                     result.Pixels[i] = new Pixel(grayLevel, grayLevel, grayLevel);
                 }
             }

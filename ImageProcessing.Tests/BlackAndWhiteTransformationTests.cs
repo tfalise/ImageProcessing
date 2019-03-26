@@ -79,5 +79,21 @@ namespace ImageProcessing.Tests
                 Check.That(actual.Pixels[i].Green).IsEqualTo(expectedGrayLevel);
             }
         }
+
+        [Test]
+        public void Should_use_luminosity_gray_method_when_specified_in_black_and_white_conversion()
+        {
+            var image = new MyImage(TestImages.ImageWithAllDifferentPixels);
+            var transformation = new BlackAndWhiteTransformation(BlackAndWhiteAlgorithm.Luminosity);
+            var actual = transformation.Process(image);
+            
+            for (var i = 0; i < image.Pixels.Length; i++)
+            {
+                var expectedGrayLevel = (int)(image.Pixels[i].Red * 0.21 + image.Pixels[i].Green * 0.72 + image.Pixels[i].Blue * 0.07);
+                Check.That(actual.Pixels[i].Red).IsEqualTo(expectedGrayLevel);
+                Check.That(actual.Pixels[i].Blue).IsEqualTo(expectedGrayLevel);
+                Check.That(actual.Pixels[i].Green).IsEqualTo(expectedGrayLevel);
+            }
+        }
     }
 }
